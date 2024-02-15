@@ -2,28 +2,73 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  margin-top: 50px;
+  margin-top: 20px;
   display: flex;
-  justify-content: center; // Centers the child horizontally
-  align-items: center; // Optional, if you also want to vertically center in the entire viewport
+  justify-content: center;
   text-align: center;
+  padding: 0 10px;
 `;
 
 const Table = styled.table`
-  width: 70vw;
+  width: 100%;
+  max-width: 900px; // Limit table size on larger screens
   text-align: left;
   border-collapse: collapse;
+
+  @media (max-width: 768px) {
+    display: block;
+    overflow-x: auto; // Enables horizontal scrolling for smaller devices
+  }
 `;
 
 const Th = styled.th`
   border-bottom: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px 8px;
+
+  @media (max-width: 768px) {
+    padding: 10px 5px;
+  }
 `;
 
 const Td = styled.td`
   border-bottom: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px 8px;
+
+  @media (max-width: 768px) {
+    padding: 8px 5px;
+  }
 `;
+
+const Input = styled.input`
+  padding: 8px;
+  margin: 4px 0; // Slightly reduce margin
+  width: calc(100% - 16px); // Ensure input does not overflow its container
+
+  @media (max-width: 768px) {
+    padding: 6px;
+    margin: 2px 0;
+  }
+`;
+
+const Button = styled.button`
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 10px;
+  }
+`;
+
 const initialDevices = [
     { id: 1, appliance: 'Refrigerator', powerRating: 150, quantity: 1, usage: 24 },
     { id: 2, appliance: 'LED Light Bulb', powerRating: 10, quantity: 10, usage: 5 },
@@ -100,7 +145,7 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
           {devices.map((device) => (
             <tr key={device.id}>
               <Td>
-                <input
+                <Input
                   type="text"
                   value={device.appliance}
                   onChange={(e) => handleInputChange(device.id, 'appliance', e.target.value)}
@@ -108,7 +153,7 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
                 />
               </Td>
               <Td>
-                <input
+                <Input
                   type="number"
                   value={device.quantity}
                   min={1}
@@ -116,14 +161,14 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
                 />
               </Td>
               <Td>
-                <input
+                <Input
                   type="number"
                   value={device.powerRating}
                   onChange={(e) => handleInputChange(device.id, 'powerRating', e.target.value)}
                 />
               </Td>
               <Td>
-                <input
+                <Input
                   type="number"
                   value={device.usage}
                   min={0}
