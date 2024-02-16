@@ -21,6 +21,35 @@ const KwhDisplay = styled.div`
 const AddressInputContainer = styled.div`
 
 `;
+const BatteryRecommendationContainer = styled.div`
+  margin-top: 30px;
+  text-align: center;
+`;
+
+const ColumnsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+
+const BatteryInfo = styled.p`
+  margin-top: 5px;
+  font-size: 1 rem;
+  font-weight: bold; // Make the font bold, similar to the bullet points
+`;
+
+const ButtonContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+`;
+
 
 const SubHeader = styled.h2`
   margin-top: 20px;
@@ -30,16 +59,18 @@ const SubHeader = styled.h2`
 const SubmitButton = styled.button`
   margin-left: 10px;
 `;
-const BatteryRecommendationContainer = styled.div`
-  margin-top: 30px;
-  text-align: center;
-`;
 
 const BatteryImagesContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // Force two columns layout
   gap: 10px; // Adjust the gap between images as needed
+  justify-items: center;
+  align-items: center;
+  width:500px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; // Single column on smaller screens
+  }
 `;
 
 const BatteryImage = styled.img`
@@ -91,6 +122,73 @@ const QuoteButton = styled.button`
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+`;
+
+const ImagesSubHeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column; // Stack items vertically
+  align-items: center; // Center items horizontally
+  justify-content: center; // Center items vertically, if needed
+  text-align:center;
+  width: 100%; // Take up full width of the parent container
+  margin-top: 10px; // Add some space above this container
+`;
+
+
+const LeftColumnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  width: 100%;
+`;
+
+const RightColumnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // Vertically center the content
+  align-items: flex-start; // Align items to the left for the right column
+  text-align: left; // Ensure text is left-aligned
+  height: 100%; // Make sure the container takes up full height for vertical centering to work effectively
+`;
+
+
+const BulletPoints = styled.ul`
+  padding-left: 20px;
+  list-style-type: disc; // Ensure bullet points are shown
+  text-align: left; // Explicitly align text to the left
+  max-width:500px;
+  li {
+    font-size: 1rem; // Increase font size
+    font-weight: bold; // Make text bolder
+    margin-bottom: 10px; // Add space between bullet points
+    text-align: left; // Ensure each bullet point's text is aligned to the left
+  }
+`;
+const Column = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+
+  &:not(:last-child) {
+margin-right:50px;
+  }
+
+  @media (max-width: 768px) {
+    &:not(:last-child) {
+      margin-right: 0; // No margin for smaller screens
+    }
+  }
+`;
+
+
+
+const BatterySectionContainer = styled.div`
+  width: 500px; // Ensures it takes up the full width
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; // Aligns the content to the right
 `;
 // This function animates the kwh number change
 const useAnimatedNumber = (targetNumber) => {
@@ -186,28 +284,48 @@ const BatteryCalculator = () => {
             <div>Address: {submittedAddress}</div>
             <KwhDisplay>{animatedKwh} Watt Hours Daily</KwhDisplay>
             <ElectricalDevicesGrid onDevicesChange={handleDevicesChange} />
-            <div>
-            <h2>Summary</h2>
-            <p>Daily kWh Usage: {dailyKwh.toFixed(2)} kWh</p>
-            <p>Annual kWh Usage: {annualKwh.toFixed(2)} kWh</p>
-            {/* Additional stats as needed */}
-          </div>
-          <BatteryRecommendationContainer>
-        <h2>Battery Recommendation</h2>
-        <BatteryImagesContainer>
-          {Array.from({ length: batteriesRequired }, (_, index) => (
-            <BatteryImage key={index} src={batteryImage} alt="Battery" />
-          ))}
-        </BatteryImagesContainer>
-        <p>Model: EG4 PowerPro WallMount All Weather Battery</p>
-        <p>Battery Type: LiFePO4 (Lithium Iron Phosphate, Grade A)</p>
-        <p>Capacity per Battery: 14.3kWh</p>
-        <p>Recommended Quantity: x {batteriesRequired}</p>
-        <p>Total Battery Capacity: {totalBatteryCapacity.toFixed(1)} kWh</p>
-        <p>Days Lasting with Zero Solar/Generator Input: {typeof daysLasting === "number" ? daysLasting.toFixed(2) : daysLasting} days</p>
-        </BatteryRecommendationContainer>
-        <button onClick={() => setShowModal(true)}>Print Your Summary</button>
+
+    <BatteryRecommendationContainer>
+      <h2>Battery Recommendation</h2>
+      <ColumnsContainer>
+        <Column>
+        <LeftColumnContainer>
+        <BatterySectionContainer> 
+          <BatteryImagesContainer>
+            {Array.from({ length: batteriesRequired }, (_, index) => (
+              <BatteryImage key={index} src={batteryImage} alt="Battery" />
+            ))}
+          </BatteryImagesContainer>
+          <ImagesSubHeaderContainer>
+          <BatteryInfo>Model: EG4 PowerPro WallMount All Weather Battery</BatteryInfo>
+          <BatteryInfo>Recommended Quantity: x {batteriesRequired}</BatteryInfo>
+          </ImagesSubHeaderContainer>
+          </BatterySectionContainer> 
+          </LeftColumnContainer>
+        </Column>
+        <Column>
+    <RightColumnContainer>
+    <BulletPoints>
+    <li>Battery Type: LiFePO4 (Lithium Iron Phosphate, Grade A)</li>
+    <li>Capacity per Battery: 14.3kWh</li>
+    <li>Total Battery Capacity: {totalBatteryCapacity.toFixed(1)} kWh</li>
+    <li>Days Lasting with Zero Solar/Generator Input: {typeof daysLasting === "number" ? daysLasting.toFixed(2) : daysLasting} days</li>
+    <li>10-year warranty for peace of mind</li>
+    <li>Over 8000 cycles at 80% DoD for long-lasting performance</li>
+    <li>Integrated self-heating feature for optimal performance in low temperatures</li>
+    <li>Designed to work with a wide range of inverters for flexible installation options</li>
+    <li>UL certified for safety and reliability</li>
+    <li>No maintenance required, simplifying ownership</li>
+    </BulletPoints>
+    </RightColumnContainer>
+        </Column>
+      </ColumnsContainer>
+      <ButtonContainer>
+        <QuoteButton onClick={() => setShowModal(true)}>Print Your Summary</QuoteButton>
         <QuoteButton onClick={handleGetQuote}>Get a Quote Today!</QuoteButton>
+      </ButtonContainer>
+    </BatteryRecommendationContainer>
+
         {showModal && (
          <Modal show={showModal}>
         <ModalContent>
