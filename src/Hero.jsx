@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import heroVideo from './assets/heromovieedited-optimized.webm';
 
 // Animations
@@ -264,6 +265,8 @@ const SepticIcon = () => (
 );
 
 const Hero = ({ scrollToContact }) => {
+  const navigate = useNavigate();
+
   return (
     <MainContainer>
       <BackgroundVideo autoPlay loop muted playsInline>
@@ -304,10 +307,8 @@ const Hero = ({ scrollToContact }) => {
           <CTAButton onClick={scrollToContact}>
             Start Your Project
           </CTAButton>
-          <SecondaryButton onClick={() => {
-            document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
-          }}>
-            Our Services
+          <SecondaryButton onClick={() => navigate('/solarpackage')}>
+            Solar Packages
           </SecondaryButton>
         </ButtonGroup>
       </Content>

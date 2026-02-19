@@ -14,6 +14,7 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
+  box-sizing: border-box;
   background: ${({ $scrolled }) => 
     $scrolled 
       ? 'rgba(18, 54, 14, 0.95)' 
@@ -283,12 +284,17 @@ const MobileContactLink = styled.a`
   }
 `;
 
-// Navigation items
+// Navigation items — 'scroll' targets a section on the homepage, 'route' navigates to a page
 const navItems = [
-  { id: 'about', label: 'About' },
-  { id: 'services', label: 'Services' },
-  { id: 'why-off-grid', label: 'Why Off-Grid' },
+  { id: 'about', label: 'About', type: 'scroll' },
+  { id: 'services', label: 'Services', type: 'scroll' },
+  { id: 'why-off-grid', label: 'Why Off-Grid', type: 'scroll' },
+  { id: 'solarpackage', label: 'Solar Packages', type: 'route', path: '/solarpackage' },
 ];
+
+// Secret admin access — persists across remounts
+let _tapCount = 0;
+let _tapTimer = null;
 
 const NavBar = ({ onContactClick }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -302,23 +308,34 @@ const NavBar = ({ onContactClick }) => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      // Determine active section
-      const sections = navItems.map(item => item.id);
-      for (const section of sections.reverse()) {
-        const element = document.getElementById(section);
+      // Only track scroll-based active sections on homepage
+      if (location.pathname !== '/') return;
+
+      const scrollItems = navItems.filter(item => item.type === 'scroll');
+      for (const item of [...scrollItems].reverse()) {
+        const element = document.getElementById(item.id);
         if (element) {
           const rect = element.getBoundingClientRect();
           if (rect.top <= 150) {
-            setActiveSection(section);
-            break;
+            setActiveSection(item.id);
+            return;
           }
         }
       }
+      setActiveSection('');
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
+
+  // Set active state for route-based nav items
+  useEffect(() => {
+    const routeItem = navItems.find(item => item.type === 'route' && item.path === location.pathname);
+    if (routeItem) {
+      setActiveSection(routeItem.id);
+    }
+  }, [location.pathname]);
 
   // Close mobile menu on resize
   useEffect(() => {
@@ -345,16 +362,47 @@ const NavBar = ({ onContactClick }) => {
   }, [isOpen]);
 
   const handleLogoClick = () => {
-    if (location.pathname === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      navigate('/');
+    _tapCount++;
+    clearTimeout(_tapTimer);
+
+    if (_tapCount >= 5) {
+      _tapCount = 0;
+      navigate('/nm-ops-7x2k');
+      setIsOpen(false);
+      return;
     }
+
+    // Only do normal nav on single click (after a short delay)
+    _tapTimer = setTimeout(() => {
+      if (_tapCount > 0 && _tapCount < 5) {
+        if (location.pathname === '/') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          navigate('/');
+        }
+      }
+      _tapCount = 0;
+    }, 400);
+
     setIsOpen(false);
   };
 
-  const handleNavClick = (sectionId) => {
-    const element = document.getElementById(sectionId);
+  const handleNavClick = (item) => {
+    if (item.type === 'route') {
+      navigate(item.path);
+      setIsOpen(false);
+      return;
+    }
+
+    // Scroll-based navigation
+    if (location.pathname !== '/') {
+      // Navigate home first, then scroll
+      navigate('/', { state: { scrollTo: item.id } });
+      setIsOpen(false);
+      return;
+    }
+
+    const element = document.getElementById(item.id);
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
@@ -384,7 +432,7 @@ const NavBar = ({ onContactClick }) => {
             <NavItem
               key={item.id}
               className={activeSection === item.id ? 'active' : ''}
-              onClick={() => handleNavClick(item.id)}
+              onClick={() => handleNavClick(item)}
             >
               {item.label}
             </NavItem>
@@ -414,7 +462,7 @@ const NavBar = ({ onContactClick }) => {
           <MobileNavItem
             key={item.id}
             className={activeSection === item.id ? 'active' : ''}
-            onClick={() => handleNavClick(item.id)}
+            onClick={() => handleNavClick(item)}
           >
             {item.label}
           </MobileNavItem>
@@ -425,11 +473,11 @@ const NavBar = ({ onContactClick }) => {
 
         <MobileContactInfo>
           <MobileContactLabel>Contact Us</MobileContactLabel>
-          <MobileContactLink href="tel:+15055551234">
-            (505) 555-1234
+          <MobileContactLink href="tel:+15053524674">
+            (505) 352-4674
           </MobileContactLink>
-          <MobileContactLink href="mailto:info@offgridland.dev">
-            info@offgridland.dev
+          <MobileContactLink href="mailto:nmoffgridsolar@gmail.com">
+            nmoffgridsolar@gmail.com
           </MobileContactLink>
         </MobileContactInfo>
       </MobileMenu>

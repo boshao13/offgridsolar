@@ -1,31 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import './index.css';
 import App from './App.jsx';
-import BatteryCalculator from './BatteryCalculator.jsx';
-import BatteryPrint from './BatteryPrint.jsx'; // Import BatteryPrint
-import FAQ from './FAQ.jsx';
-import Contact from './Contact.jsx';
-import NavBar from './NavBar.jsx'; // Import NavBar
-import Footer from './Footer.jsx'; // Import Footer
+import NavBar from './NavBar.jsx';
+import Footer from './Footer.jsx';
+import SolarPackages from './SolarPackages.jsx';
+import AdminDashboard from './AdminDashboard.jsx';
+import ThankYou from './ThankYou.jsx';
 
-
-// Layout Wrapper for Contact Page
-const ContactPageLayout = () => (
-  <>
+// Layout Wrapper for Solar Packages Page
+const SolarPackagesLayout = () => (
+  <div style={{ overflowX: 'hidden', width: '100%', minHeight: '100vh' }}>
     <NavBar />
-    <Contact />
+    <SolarPackages />
     <Footer />
-  </>
-);
-
-// Layout Wrapper for BatteryPrint Page
-const BatteryPrintLayout = () => (
-  <>
-    <NavBar />
-    <BatteryPrint />
-    <Footer />
-  </>
+  </div>
 );
 
 const router = createBrowserRouter([
@@ -34,14 +24,17 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/battery-calculator',
-    element: <BatteryCalculator />,
+    path: '/solarpackage',
+    element: <SolarPackagesLayout />,
   },
   {
-    path: '/faq',
-    element: <FAQ />,
+    path: '/order-confirmed',
+    element: <ThankYou />,
   },
-
+  {
+    path: '/nm-ops-7x2k',
+    element: <AdminDashboard />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
