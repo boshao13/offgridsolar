@@ -6,9 +6,10 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   text-align: center;
-  padding: 0 10px;
-  font-size:20px;
+
+  font-size: 20px;
   margin-bottom: 50px;
+  overflow-x: auto; // Allow horizontal scrolling on mobile
 `;
 
 const Table = styled.table`
@@ -18,93 +19,104 @@ const Table = styled.table`
   border-collapse: collapse;
 
   @media (max-width: 768px) {
-    display: block;
-    overflow-x: auto; // Enables horizontal scrolling for smaller devices
+    width: 100vw; // Ensure the table fits within the viewport width
+    font-size: 12px; // Adjust font size for smaller screens
   }
 `;
+
 const Th = styled.th`
   border-bottom: 1px solid #ddd;
-  padding: 4px; // Further reduced padding
-  font-size: 14px; // Smaller font size to save space
-  &:nth-child(1) {
-    width: 25%; // Keep or adjust the first column width as needed
+  padding: 4px;
+  font-size: 14px;
+
+  &:nth-child(2),
+  &:nth-child(3) {
+    width: 50px; // Make these columns narrower
   }
+
   @media (max-width: 768px) {
-    padding: 4px; // Consistent reduced padding for smaller screens
+    padding: 3px; // Reduce padding on mobile
+    font-size: 12px;
   }
 `;
 
 const Td = styled.td`
   border-bottom: 1px solid #ddd;
-  padding: 4px; // Matched to Th padding for a tighter look
-  font-size: 13px; // Further reduced for space efficiency
+  padding: 4px;
+  font-size: 13px;
+
+  &:nth-child(2),
+  &:nth-child(3) {
+    width: 50px; // Make these columns narrower
+    text-align: center; // Center-align smaller cells
+  }
+
   @media (max-width: 768px) {
-    padding: 4px; // Consistent with Th adjustments for smaller screens
+    padding: 3px; // Reduce padding on mobile
+    font-size: 12px;
   }
 `;
 
 const Input = styled.input`
-  padding: 2px; // Minimal padding to make input fields smaller
-  margin: 1px 0; // Minimal margin to compact the layout further
-  width: calc(100% - 4px); // Adjusted width for new padding
-  font-size: 13px; // Reduced font size for compactness
+  padding: 2px;
+  margin: 1px 0;
+  width: calc(100% - 4px);
+  font-size: 13px;
+
   @media (max-width: 768px) {
     padding: 2px;
     margin: 1px 0;
+    font-size: 12px; // Smaller font size for mobile
   }
 `;
 
 const Button = styled.button`
-  color: #fff;
-  background-color: #007bff;
+  background-color: #ffde59; // Yellow background for buttons
+  color: #12360e; // Dark green text for buttons
   border: none;
-  padding: 4px 8px; // Further reduced padding for a smaller button
-  margin-top: 4px; // Reduced margin top
+  padding: 4px 8px;
+  margin-top: 4px;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.2s ease;
-  font-size: 13px; // Reduced font size for button text
+  font-size: 13px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #e6cd4e; // Slightly darker yellow on hover
   }
 
   @media (max-width: 768px) {
-    padding: 4px 8px;
+    padding: 3px 6px; // Smaller padding for mobile
+    font-size: 12px; // Smaller font size for mobile
   }
-  `
-  const TdHighlight = styled(Td)`
+`;
+
+const TdHighlight = styled(Td)`
   font-size: 18px; // Larger font size for emphasis
   font-weight: bold; // Make it bold
-  color: #007bff; // Optional: Change the color to make it stand out more
+  color: #ffde59; // Yellow color for totals
+
+  @media (max-width: 768px) {
+    font-size: 14px; // Adjust font size for mobile
+  }
 `;
 
 const initialDevices = [
-    { id: 1, appliance: 'Refrigerator', powerRating: 150, quantity: 1, usage: 24 },
-    { id: 2, appliance: 'LED Light Bulb', powerRating: 10, quantity: 10, usage: 5 },
-    { id: 3, appliance: 'Ceiling Fan', powerRating: 70, quantity: 3, usage: 6 },
-    { id: 4, appliance: 'LCD Television', powerRating: 150, quantity: 2, usage: 4 },
-    { id: 5, appliance: 'Desktop Computer', powerRating: 200, quantity: 1, usage: 4 },
-    { id: 7, appliance: 'Washing Machine', powerRating: 500, quantity: 1, usage: 1 },
-    { id: 8, appliance: 'Dryer', powerRating: 3000, quantity: 1, usage: 1 },
-    { id: 9, appliance: 'Dishwasher', powerRating: 1500, quantity: 1, usage: 1.5 },
-    { id: 10, appliance: 'Electric Oven', powerRating: 2150, quantity: 1, usage: 1 },
-    { id: 11, appliance: 'Microwave Oven', powerRating: 1000, quantity: 1, usage: 0.5 },
-    { id: 12, appliance: 'Coffee Maker', powerRating: 800, quantity: 1, usage: 0.5 },
-    { id: 13, appliance: 'Toaster', powerRating: 850, quantity: 1, usage: 0.2 },
-    { id: 15, appliance: 'Hair Dryer', powerRating: 1500, quantity: 1, usage: 0.2 },
-    { id: 16, appliance: 'Air Conditioner', powerRating: 2500, quantity: 1, usage: 3 },
-    { id: 17, appliance: 'Space Heater', powerRating: 1500, quantity: 2, usage: 5 },
-    { id: 18, appliance: 'Water Heater', powerRating: 4000, quantity: 1, usage: 3 },
-    { id: 20, appliance: 'Electric Kettle', powerRating: 1200, quantity: 1, usage: 0.5 },
-    // Add more devices as needed
-  ];
-  
+  { id: 1, appliance: 'Refrigerator', powerRating: 150, quantity: 1, usage: 24 },
+  { id: 2, appliance: 'LED Light Bulb', powerRating: 10, quantity: 10, usage: 5 },
+  { id: 3, appliance: 'Ceiling Fan', powerRating: 70, quantity: 3, usage: 6 },
+  { id: 4, appliance: 'LCD Television', powerRating: 150, quantity: 2, usage: 4 },
+  { id: 5, appliance: 'Desktop Computer', powerRating: 200, quantity: 1, usage: 4 },
+];
 
-
-
-const ElectricalDevicesGrid = ({onDevicesChange }) => {
+const ElectricalDevicesGrid = ({ onDevicesChange, resetKey }) => {
   const [devices, setDevices] = useState(initialDevices);
+
+  // Reset devices when resetKey changes
+  useEffect(() => {
+    console.log('Resetting devices with resetKey:', resetKey);
+    setDevices(initialDevices);
+  }, [resetKey]);
 
   const handleInputChange = (id, field, value) => {
     setDevices(devices.map(device => {
@@ -114,31 +126,24 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
       return device;
     }));
   };
+
   const removeDevice = (id) => {
     setDevices(devices.filter(device => device.id !== id));
   };
+
   const calculateWattHoursPerDay = (device) => {
-    // Ensure quantity and usage are numbers to avoid NaN results
     const quantity = Number(device.quantity) || 0;
     const usage = Number(device.usage) || 0;
     return device.powerRating * quantity * usage;
   };
+
   useEffect(() => {
-    // Calculate and update the total kWh usage
     const totalKwh = devices.reduce((sum, device) => sum + calculateWattHoursPerDay(device), 0) / 1000;
-    onDevicesChange(totalKwh); // Pass the total kWh back up to the parent component
+    onDevicesChange(totalKwh);
   }, [devices, onDevicesChange]);
 
-  // Calculate summary data
   const dailyKwh = devices.reduce((sum, device) => sum + calculateWattHoursPerDay(device), 0) / 1000;
   const annualKwh = dailyKwh * 365;
-
-
-  useEffect(() => {
-    // Sum the Watt Hours per Day for all devices
-    const totalKwh = devices.reduce((sum, device) => sum + calculateWattHoursPerDay(device), 0);
-    onDevicesChange(totalKwh); // Pass the total kWh back up to the parent component
-  }, [devices, onDevicesChange]); // Include onDevicesChange to the dependency array if eslint-plugin-react-hooks recommends it
 
   const addDevice = () => {
     const newId = devices.length > 0 ? Math.max(...devices.map(d => d.id)) + 1 : 1;
@@ -160,7 +165,7 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
           </tr>
         </thead>
         <tbody>
-          {devices.map((device) => (
+          {devices.map(device => (
             <tr key={device.id}>
               <Td>
                 <Input
@@ -196,7 +201,7 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
               </Td>
               <Td>{calculateWattHoursPerDay(device).toFixed(2)}</Td>
               <Td>
-                <Button onClick={() => removeDevice(device.id)} style={{color: 'red', fontWeight: 'bold'}}>X</Button>
+                <Button onClick={() => removeDevice(device.id)}>X</Button>
               </Td>
             </tr>
           ))}
@@ -206,22 +211,19 @@ const ElectricalDevicesGrid = ({onDevicesChange }) => {
             </Td>
           </tr>
           <tr>
-          <Td colSpan="4" style={{fontWeight: 'bold', textAlign: 'right'}}>Daily kWh Usage:</Td>
-          <TdHighlight style={{textAlign: 'right'}}>{dailyKwh.toFixed(2)} kWh</TdHighlight>
-          <Td></Td> {/* Empty cell for the Action column */}
-        </tr>
-        <tr>
-          <Td colSpan="4" style={{fontWeight: 'bold', textAlign: 'right'}}>Annual kWh Usage:</Td>
-          <TdHighlight style={{textAlign: 'right'}}>{annualKwh.toFixed(2)} kWh</TdHighlight>
-          <Td></Td> {/* Empty cell for the Action column */}
-        </tr>
+            <Td colSpan="4" style={{ fontWeight: 'bold', textAlign: 'right' }}>Daily kWh Usage:</Td>
+            <TdHighlight>{dailyKwh.toFixed(2)} kWh</TdHighlight>
+            <Td></Td>
+          </tr>
+          <tr>
+            <Td colSpan="4" style={{ fontWeight: 'bold', textAlign: 'right' }}>Annual kWh Usage:</Td>
+            <TdHighlight>{annualKwh.toFixed(2)} kWh</TdHighlight>
+            <Td></Td>
+          </tr>
         </tbody>
       </Table>
     </Container>
   );
-  
-  
-  
-          }  
+};
 
 export default ElectricalDevicesGrid;
